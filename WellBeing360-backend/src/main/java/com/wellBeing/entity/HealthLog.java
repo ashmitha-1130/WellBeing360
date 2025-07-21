@@ -29,8 +29,8 @@ public class HealthLog {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MoodRating mood_rating;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
 }

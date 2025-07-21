@@ -29,7 +29,10 @@ public class HealthLogController {
 	@GetMapping("/getData")
 	public ResponseEntity<?> getAllHeathRecord(){
 		List<HealthLog> all = healthController.getHeath();
-		return new ResponseEntity<>(all,HttpStatus.OK);
+		if(all != null & !all.isEmpty()) {
+			return new ResponseEntity<>(all,HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	@PostMapping("/addData")
@@ -50,7 +53,7 @@ public class HealthLogController {
 	        HealthLog existing = data.get();
 	        existing.setSleep_hours(log.getSleep_hours());
 	        existing.setMood_rating(log.getMood_rating());
-	        existing.setUser(log.getUser());
+//	        existing.setUser(log.getUser());
 
 	        HealthLog updated = healthController.saveHealthLog(existing);
 	        return new ResponseEntity<>(updated, HttpStatus.OK);

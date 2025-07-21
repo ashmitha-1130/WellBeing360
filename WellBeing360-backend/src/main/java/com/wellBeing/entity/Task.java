@@ -1,5 +1,10 @@
 package com.wellBeing.entity;
 
-public class Task {
+import jakarta.persistence.*;
 
+@Entity
+public class Task {
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private int id;
 }
