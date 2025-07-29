@@ -20,7 +20,7 @@ import com.wellBeing.entity.HealthLog;
 import com.wellBeing.service.HealthLogService;
 
 @RestController
-@RequestMapping("/health")
+@RequestMapping("/heal66th")
 public class HealthLogController {
 
 	@Autowired
