@@ -1,5 +1,6 @@
 package com.wellBeing.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
@@ -18,17 +19,22 @@ public class HealthLog {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int health_id;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private Integer sleep_hours;
+    
+    @Column(nullable = false)
+    private Integer water_ml;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MoodRating mood_rating;
+    
+    private String notes;
 //
 //    @ManyToOne
 //    @JoinColumn(name = "user_id", nullable = false)

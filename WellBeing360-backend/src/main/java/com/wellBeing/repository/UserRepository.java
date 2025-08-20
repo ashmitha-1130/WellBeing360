@@ -7,5 +7,11 @@ import com.wellBeing.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
+	
+     User findByUserName(String UserName);
+     
+     User deleteByUserName(String UserName);
+	
+	
 
 }

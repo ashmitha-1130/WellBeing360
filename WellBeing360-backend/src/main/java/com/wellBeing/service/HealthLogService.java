@@ -1,5 +1,6 @@
 package com.wellBeing.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class HealthLogService {
 	}
 	
 	public HealthLog saveHealthLog(HealthLog log) {
-		log.setDate(LocalDateTime.now());
+		log.setDate(LocalDate.now());
 		return healthLogRepo.save(log);
 	}
 	
