@@ -7,6 +7,7 @@ import com.wellBeing.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
+<<<<<<< HEAD
 	
      User findByUserName(String UserName);
      
@@ -14,4 +15,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 	
 	
 
+=======
+	User findByUsername(String username);
+>>>>>>> branch 'main' of https://github.com/ashmitha-1130/WellBeing360.git
 }
