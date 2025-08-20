@@ -15,18 +15,7 @@ import java.time.LocalDateTime;
     }
 )
 public class User {
-<<<<<<< HEAD
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int userId;
-	private String userName;
-	private String password;
-	private List<String> roles;
-	@OneToMany
-	private List<HealthLog> healthlog;
-=======
->>>>>>> branch 'main' of https://github.com/ashmitha-1130/WellBeing360.git
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
