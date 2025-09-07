@@ -1,73 +1,88 @@
 package com.wellBeing.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import com.wellBeing.entity.WeeklySummaryDto;
+import com.wellBeing.entity.HealthLog;
+import com.wellBeing.entity.User;
+import com.wellBeing.service.HealthLogService;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.wellBeing.entity.HealthLog;
-import com.wellBeing.service.HealthLogService;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
-@RequestMapping("/health")
+@RequestMapping("/api/health")
 public class HealthLogController {
 
-	@Autowired
-	private HealthLogService healthController;
-	
-	@GetMapping("/getData")
-	public ResponseEntity<?> getAllHeathRecord(){
-		List<HealthLog> all = healthController.getHeath();
-		if(all != null & !all.isEmpty()) {
-			return new ResponseEntity<>(all,HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-	
-	@PostMapping("/addData")
-	public ResponseEntity<HealthLog> addHealthLog(@RequestBody HealthLog log){
-		HealthLog logdata = healthController.saveHealthLog(log);
-		return new ResponseEntity<>(logdata,HttpStatus.CREATED);
-	}
-	@GetMapping("/getById/{id}")
-	public ResponseEntity<?> getHeathById(@PathVariable int id){
-		Optional<HealthLog> dataById = healthController.findById(id);
-		return new ResponseEntity<>(dataById,HttpStatus.OK);
-	}
-	
-	@PutMapping("/updateData/{id}")
-	public ResponseEntity<?> updateHealth(@RequestBody HealthLog log, @PathVariable int id ){
-	    Optional<HealthLog> data = healthController.findById(id);
-	    if(data.isPresent()) {
-	        HealthLog existing = data.get();
-	        existing.setSleep_hours(log.getSleep_hours());
-	        existing.setMood_rating(log.getMood_rating());
-//	        existing.setUser(log.getUser());
+    @Autowired
+    private HealthLogService healthLogService;
 
-	        HealthLog updated = healthController.saveHealthLog(existing);
-	        return new ResponseEntity<>(updated, HttpStatus.OK);
-	    }
-	    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
+    /**
+     * Get current user from session
+     */
+    private User getCurrentUser(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new RuntimeException("User not logged in");
+        }
+        return user;
+    }
 
-	
-	@DeleteMapping("/deleteById/{id}")
-	public ResponseEntity<?> deleteById(@PathVariable int id){
-		healthController.deleteHeathLog(id);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-	
-	
-	
+    /**
+     * Create or update today's log
+     */
+    @PostMapping("/addLog")
+    public ResponseEntity<?> createOrUpdateLog(@RequestBody HealthLog log, HttpSession session) {
+        User user = getCurrentUser(session);
+        if(log.getMood_rating() > 5) {
+        		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mood rating should be in range of (1-5)");
+        }
+        HealthLog saved = healthLogService.createOrUpdateLog(user, log);
+        
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    /**
+     * Get all logs for the current user
+     */
+    @GetMapping("/getLogs")
+    public ResponseEntity<?> getAllLogs(HttpSession session) {
+        User user = getCurrentUser(session);
+        List<HealthLog> logs = healthLogService.getLogs(user);
+
+        if (logs.isEmpty()) {
+            return new ResponseEntity<>("No logs found", HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(logs, HttpStatus.OK);
+    }
+
+    /**
+     * Get weekly summary (last 7 days)
+     */
+    @GetMapping("/weekly-summary")
+    public ResponseEntity<WeeklySummaryDto> getWeeklySummary(HttpSession session) {
+        User user = getCurrentUser(session);
+        WeeklySummaryDto summary = healthLogService.getWeeklySummary(user);
+        return ResponseEntity.ok(summary);
+    }
+
+    /**
+     * Delete log for a given date
+     */
+    @DeleteMapping("/delete/{date}")
+    public ResponseEntity<?> deleteLog(@PathVariable String date, HttpSession session) {
+        User user = getCurrentUser(session);
+        LocalDate parsedDate = LocalDate.parse(date);
+
+        boolean deleted = healthLogService.deleteLogByDate(user, parsedDate);
+        if (deleted) {
+            return ResponseEntity.ok("Log deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No log found for this date");
+        }
+    }
 }
