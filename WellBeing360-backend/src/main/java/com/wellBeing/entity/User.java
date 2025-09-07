@@ -1,6 +1,9 @@
 package com.wellBeing.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -29,6 +32,7 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+    
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
