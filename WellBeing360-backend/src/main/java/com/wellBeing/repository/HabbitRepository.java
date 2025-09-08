@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import com.wellBeing.entity.Habbit;
 
 @Repository
-public interface HabbitRepository extends JpaRepository<Habbit,Integer> {
+public interface HabbitRepository extends JpaRepository<Habbit,Long> {
+	
+	
 
 }
