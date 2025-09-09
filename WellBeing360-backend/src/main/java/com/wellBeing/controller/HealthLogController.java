@@ -21,9 +21,9 @@ public class HealthLogController {
     @Autowired
     private HealthLogService healthLogService;
 
-    /**
-     * Get current user from session
-     */
+   
+     // Get current user from session
+     
     private User getCurrentUser(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -32,9 +32,9 @@ public class HealthLogController {
         return user;
     }
 
-    /**
-     * Create or update today's log
-     */
+    
+     // Create or update today's log
+     
     @PostMapping("/addLog")
     public ResponseEntity<?> createOrUpdateLog(@RequestBody HealthLog log, HttpSession session) {
         User user = getCurrentUser(session);
@@ -46,9 +46,9 @@ public class HealthLogController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-    /**
-     * Get all logs for the current user
-     */
+    
+      // Get all logs for the current user
+    
     @GetMapping("/getLogs")
     public ResponseEntity<?> getAllLogs(HttpSession session) {
         User user = getCurrentUser(session);
@@ -60,9 +60,9 @@ public class HealthLogController {
         return new ResponseEntity<>(logs, HttpStatus.OK);
     }
 
-    /**
-     * Get weekly summary (last 7 days)
-     */
+    
+     // Get weekly summary (last 7 days)
+     
     @GetMapping("/weekly-summary")
     public ResponseEntity<WeeklySummaryDto> getWeeklySummary(HttpSession session) {
         User user = getCurrentUser(session);
@@ -70,9 +70,9 @@ public class HealthLogController {
         return ResponseEntity.ok(summary);
     }
 
-    /**
-     * Delete log for a given date
-     */
+   
+     // Delete log for a given date
+     
     @DeleteMapping("/delete/{date}")
     public ResponseEntity<?> deleteLog(@PathVariable String date, HttpSession session) {
         User user = getCurrentUser(session);

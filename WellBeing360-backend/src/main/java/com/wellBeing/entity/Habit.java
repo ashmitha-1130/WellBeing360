@@ -8,13 +8,13 @@ import lombok.Data;
 @Data
 @Entity
 @Table(
-		name="habbit",
+		name="habit",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames = {"user_id","name"})
 		}
 		
 		)
-public class Habbit {
+public class Habit {
 	
 	public enum Frequency{
 		Daily,
@@ -23,19 +23,24 @@ public class Habbit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long habbit_id;
+    private long habitId;
     @Column(nullable = false)
     private String name;
     
     @ManyToOne
     @JoinColumn(name="user_id",nullable=false)
+    private User user;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable =false)
     private Frequency frequency;
     
-    @Column(nullable = false)
-    private int streak_count;
-    private LocalDate last_completed_date;
+    @Column(name = "streak_count")
+    private int streakCount;
+
+    @Column(name = "last_completed_date")
+    private LocalDate lastCompletedDate;
+    
+   
  
 }
