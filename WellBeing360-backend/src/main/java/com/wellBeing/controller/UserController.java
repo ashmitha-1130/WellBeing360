@@ -21,7 +21,7 @@ import com.wellBeing.service.UserService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class UserController {
 	
